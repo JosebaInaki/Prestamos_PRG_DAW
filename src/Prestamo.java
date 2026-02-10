@@ -49,4 +49,7 @@ public class Prestamo {
         "\\n Fecha devolucion prevista: "+this.fechaDevolucionPrevista+
         "\\n Fecha devolucion real: "+this.fechaDevolucionReal;
   }
+  public String getCodigoLibro() {
+    return codigoLibro;
+  }
 }

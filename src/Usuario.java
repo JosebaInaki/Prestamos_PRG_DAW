@@ -45,4 +45,7 @@ public class Usuario {
         "\\n Sancionado: "+this.sancionado+
         "\\n Fecha fin sanción: "+this.fechaFinSancion;
   }
+  public String getNumeroSocio() {
+    return numeroSocio;
+  }
 }
