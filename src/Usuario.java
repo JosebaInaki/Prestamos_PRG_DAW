@@ -1,35 +1,33 @@
 import java.time.Duration;
 import java.time.LocalDate;
+
 public class Usuario {
   private String nombre;
-  private String email="*@*.*";
-  private String numeroSocio="SOC\\d{5}";
+  private String email;
+  private String numeroSocio;
   private LocalDate fechaRegistro;
   private boolean sancionado;
   private LocalDate fechaFinSancion;
   public Usuario(String nombre,String email,String numeroSocio,LocalDate fechaRegistro) throws UsuarioInvalidoException {
-    try {
       this.nombre = nombre;
       this.email = email;
       this.numeroSocio = numeroSocio;
       this.fechaRegistro = fechaRegistro;
-    } catch (Exception e) {
-        if (this.nombre == null) {
+      if (this.nombre == null) {
         throw new UsuarioInvalidoException("Nombre incorrecto");
-        }
-        if (this.email == null) {
-          throw new UsuarioInvalidoException("Email incorrecto");
-        }
-        if (this.numeroSocio == null) {
-          throw new UsuarioInvalidoException("Numero socio incorrecto");
-        }
-        if (this.fechaRegistro == null) {
-          throw new UsuarioInvalidoException("Fecha registro incorrecta");
-        }
-    }
+      }
+      if (!this.email.matches(".+@.+\\..+")){
+        throw new UsuarioInvalidoException("Email incorrecto");
+      }
+      if (!this.numeroSocio.matches("SOC\\d{5}")) {
+        throw new UsuarioInvalidoException("Numero de socio incorrecto");
+      }
+      if (this.fechaRegistro == null) {
+        throw new UsuarioInvalidoException("Fecha de registro incorrecta");
+      }
   }
-  public void sancionar(int diasSancion){
-    fechaFinSancion= LocalDate.of(1,1,1111).plusDays(diasSancion);
+  public void sancionar(int diasSancion, LocalDate inicioSancion){
+    fechaFinSancion= inicioSancion.plusDays(diasSancion);
   }
   public void levantarSancion(){
     this.sancionado=false;
@@ -42,7 +40,7 @@ public class Usuario {
   public String toString() {
     return "Nombre : "+this.nombre+
         "\\n Email: "+this.email+
-        "\\n NumeroSocio: "+this.numeroSocio+
+        "\\n Numero Socio: "+this.numeroSocio+
         "\\n Fecha registro: "+this.fechaRegistro+
         "\\n Sancionado: "+this.sancionado+
         "\\n Fecha fin sanción: "+this.fechaFinSancion;
