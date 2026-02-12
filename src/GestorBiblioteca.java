@@ -1,64 +1,77 @@
 import java.time.LocalDate;
 
 public class GestorBiblioteca {
-  private final static int MAX_USUARIOS=50;
-  private final static int MAX_PRESTAMOS=200;
+  private static final int MAX_USUARIOS = 50;
+  private static final int MAX_PRESTAMOS = 200;
   private Usuario[] usuarios;
   private Prestamo[] prestamos;
   private int numeroUsuarios;
   private int numeroPrestamos;
-  public GestorBiblioteca(){
-    usuarios= new Usuario[MAX_USUARIOS];
-    prestamos= new Prestamo[MAX_PRESTAMOS];
-    numeroUsuarios=0;
-    numeroPrestamos=0;
+
+  public GestorBiblioteca() {
+    usuarios = new Usuario[MAX_USUARIOS];
+    prestamos = new Prestamo[MAX_PRESTAMOS];
+    numeroUsuarios = 0;
+    numeroPrestamos = 0;
   }
-  public void registrarUsuario(Usuario usuario) throws UsuarioRepetidoException{
-    for(int i=0;i<numeroUsuarios;i++){
-      if(usuarios[i]==usuario){
-        throw new UsuarioRepetidoException("Este usuario ya esta registrado");
+  public void registrarUsuario(Usuario usuario) throws UsuarioRepetidoException {
+    for (int i = 0; i < numeroUsuarios; i++) {
+      if (usuarios[i].getNumeroSocio().equals(usuario.getNumeroSocio())) {
+        throw new UsuarioRepetidoException("Usuario repetido");
       }
     }
-    usuarios[numeroUsuarios]=usuario;
-    numeroUsuarios++;
+    usuarios[numeroUsuarios++] = usuario;
   }
-  public Prestamo realizarPrestamo(String codigoLibro, String tituloLibro, LocalDate fechaPrestamo, Usuario usuario) throws PrestamoInvalidoException,UsuarioSancionadoException,LibroNoDisponibleException{
-    if(usuario.estaSancionado()){
-      throw new UsuarioSancionadoException("Este usuario está sancionado");
+  public Prestamo realizarPrestamo(String codigoLibro, String tituloLibro, LocalDate fechaPrestamo, Usuario usuario) throws PrestamoInvalidoException, UsuarioSancionadoException, LibroNoDisponibleException {
+    if (usuario == null) {
+      throw new PrestamoInvalidoException("Usuario no existe");
     }
-    for(int i=0;i<numeroPrestamos;i++){
-      if(prestamos[i].getCodigoLibro().equals(codigoLibro)){
-        throw new LibroNoDisponibleException("Este libro no está disponible");
+    if (usuario.estaSancionado()) {
+      throw new UsuarioSancionadoException("Usuario sancionado");
+    }
+    for (int i = 0; i < numeroPrestamos; i++) {
+      if (prestamos[i].getCodigoLibro().equals(codigoLibro)
+          && prestamos[i].getFechaDevolucionReal() == null) {
+        throw new LibroNoDisponibleException("Libro no disponible");
       }
     }
-    return new Prestamo(codigoLibro,tituloLibro,usuario,fechaPrestamo);
+    Prestamo prestamoNuevo = new Prestamo(codigoLibro, tituloLibro, usuario, fechaPrestamo);
+    prestamos[numeroPrestamos++] = prestamoNuevo;
+    return prestamoNuevo;
   }
-  public Usuario buscarUsuario(String numeroSocio){
-    Usuario usuarioBuscado=null;
-    for(int i=0;i<numeroUsuarios;i++){
-      if(usuarios[i].getNumeroSocio().equals(numeroSocio)){
-        usuarioBuscado=usuarios[i];
+  public boolean devolverLibro(String codigoLibro, LocalDate fechaDevolucion)
+      throws PrestamoInvalidoException {
+    for (int i = 0; i < numeroPrestamos; i++) {
+
+      if (prestamos[i].getCodigoLibro().equals(codigoLibro)
+          && prestamos[i].getFechaDevolucionReal() == null) {
+
+        prestamos[i].registrarDevolucion(fechaDevolucion);
+
+        int diasRetraso = prestamos[i].calcularDiasRetraso();
+
+        if (diasRetraso > 0) {
+          prestamos[i].getSocio()
+              .sancionar(diasRetraso, fechaDevolucion);
+        }
+        return true;
       }
     }
-    return usuarioBuscado;
+    return false;
   }
-  public void getPrestamos(){
-    for(int i=0;i<numeroPrestamos;i++){
-        prestamos[i].toString();
-      System.out.println();
+  public Usuario buscarUsuario(String numeroSocio) {
+
+    for (int i = 0; i < numeroUsuarios; i++) {
+      if (usuarios[i].getNumeroSocio().equals(numeroSocio)) {
+        return usuarios[i];
+      }
     }
+    return null;
   }
-  public void getUsuarios(){
-    for(int i=0;i<numeroUsuarios;i++){
-      usuarios[i].toString();
-      System.out.println();
-    }
+  public Usuario[] getUsuarios() {
+    return usuarios;
   }
-  @Override
-  public String toString() {
-    this.getUsuarios();
-    this.getPrestamos();
-    return "Numero de usuarios : "+this.numeroUsuarios+
-        "\\n Numero de prestamos: "+this.numeroPrestamos;
+  public Prestamo[] getPrestamos() {
+    return prestamos;
   }
 }

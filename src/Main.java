@@ -59,10 +59,22 @@ public class Main {
         case 3:
           break;
         case 4:
+          System.out.println("Numero de socio del usuario:");
+          String numeroSocio = in.nextLine();
+
+          Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
+          if(usuario.estaSancionado()){
+            System.out.println("Este usuario esta sancionado");
+          }
+          else {
+            System.out.println("Este usuario no esta sancionado");
+          }
           break;
         case 5:
+          gestorBiblioteca.getPrestamos();
           break;
         case 6:
+          gestorBiblioteca.getUsuarios();
           break;
         case 7:
           break;
