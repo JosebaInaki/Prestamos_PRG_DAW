@@ -1,18 +1,20 @@
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
   private String nombre;
   private String email;
   private String numeroSocio;
   private LocalDate fechaRegistro;
+  DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
   private boolean sancionado;
   private LocalDate fechaFinSancion;
   public Usuario(String nombre,String email,String numeroSocio,LocalDate fechaRegistro) throws UsuarioInvalidoException {
       this.nombre = nombre;
       this.email = email;
       this.numeroSocio = numeroSocio;
-      this.fechaRegistro = fechaRegistro;
+      this.fechaRegistro = LocalDate.parse(formatoFecha.format(fechaRegistro));
       if (this.nombre == null) {
         throw new UsuarioInvalidoException("Nombre incorrecto");
       }
@@ -27,7 +29,7 @@ public class Usuario {
       }
   }
   public void sancionar(int diasSancion, LocalDate inicioSancion){
-    fechaFinSancion= inicioSancion.plusDays(diasSancion);
+    fechaFinSancion= LocalDate.parse(formatoFecha.format(inicioSancion.plusDays(diasSancion)));
   }
   public void levantarSancion(){
     this.sancionado=false;

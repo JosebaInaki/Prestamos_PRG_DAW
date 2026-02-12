@@ -1,10 +1,12 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Prestamo {
   private String codigoLibro;
   private String tituloLibro;
   private Usuario socio;
+  DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
   private LocalDate fechaPrestamo;
   private LocalDate fechaDevolucionPrevista;
   private LocalDate fechaDevolucionReal;
@@ -12,8 +14,8 @@ public class Prestamo {
     this.codigoLibro=codigoLibro;
     this.tituloLibro=tituloLibro;
     this.socio=socio;
-    this.fechaPrestamo=fechaPrestamo;
-    this.fechaDevolucionPrevista=this.fechaPrestamo.plusDays(14);
+    this.fechaPrestamo=LocalDate.parse(formatoFecha.format(fechaPrestamo));
+    this.fechaDevolucionPrevista= LocalDate.parse(formatoFecha.format(this.fechaPrestamo.plusDays(14)));
     if(!this.codigoLibro.matches("[A-Z]{3}\\d{4}")){
       throw new PrestamoInvalidoException("Código del libro incorrecto");
     }
@@ -25,7 +27,7 @@ public class Prestamo {
     }
   }
   public void registrarDevolucion(LocalDate fechaDevolucion) throws PrestamoInvalidoException{
-    this.fechaDevolucionReal=fechaDevolucion;
+    this.fechaDevolucionReal=LocalDate.parse(formatoFecha.format(fechaDevolucion));
     if(this.fechaDevolucionReal.isBefore(this.fechaPrestamo) || this.fechaDevolucionReal ==null){
       throw new PrestamoInvalidoException("Fecha de devolución incorrecta");
     }
