@@ -12,7 +12,7 @@ public class Prestamo {
   public Prestamo(String codigoLibro, String tituloLibro, Usuario socio, LocalDate fechaPrestamo) throws PrestamoInvalidoException {
 
     if (codigoLibro == null || !codigoLibro.matches("[A-Z]{3}\\d{4}")) {
-      throw new PrestamoInvalidoException("Código del libro incorrecto");
+      throw new PrestamoInvalidoException("Código del libro incorrecto,\n Debe tener este formato: 3 letras mayúsculas + 4 dígitos");
     }
     if (tituloLibro == null || tituloLibro.isBlank()) {
       throw new PrestamoInvalidoException("Título del libro incorrecto");

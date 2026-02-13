@@ -17,7 +17,7 @@ public class Usuario {
       throw new UsuarioInvalidoException("Email incorrecto");
     }
     if (numeroSocio == null || !numeroSocio.matches("SOC\\d{5}")) {
-      throw new UsuarioInvalidoException("Numero de socio incorrecto");
+      throw new UsuarioInvalidoException("Numero de socio incorrecto,\n Debe tener este formato: SOC + 5 dígitos");
     }
     if (fechaRegistro == null) {
       throw new UsuarioInvalidoException("Fecha de registro incorrecta");
@@ -56,5 +56,8 @@ public class Usuario {
   }
   public LocalDate getFechaFinSancion() {
     return fechaFinSancion;
+  }
+  public boolean getSancionado(){
+    return sancionado;
   }
 }
