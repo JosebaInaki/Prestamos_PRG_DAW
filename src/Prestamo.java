@@ -12,7 +12,7 @@ public class Prestamo {
   public Prestamo(String codigoLibro, String tituloLibro, Usuario socio, LocalDate fechaPrestamo) throws PrestamoInvalidoException {
 
     if (codigoLibro == null || !codigoLibro.matches("[A-Z]{3}\\d{4}")) {
-      throw new PrestamoInvalidoException("Código del libro incorrecto,\n Debe tener este formato: 3 letras mayúsculas + 4 dígitos");
+      throw new PrestamoInvalidoException("Código del libro incorrecto,\nDebe tener este formato: 3 letras mayúsculas + 4 dígitos");
     }
     if (tituloLibro == null || tituloLibro.isBlank()) {
       throw new PrestamoInvalidoException("Título del libro incorrecto");
@@ -31,8 +31,7 @@ public class Prestamo {
     this.fechaDevolucionPrevista = fechaPrestamo.plusDays(14);
     this.fechaDevolucionReal = null;
   }
-  public void registrarDevolucion(LocalDate fechaDevolucion)
-      throws PrestamoInvalidoException {
+  public void registrarDevolucion(LocalDate fechaDevolucion) throws PrestamoInvalidoException {
     if (fechaDevolucion == null) {
       throw new PrestamoInvalidoException("Fecha de devolución nula");
     }
@@ -42,8 +41,7 @@ public class Prestamo {
     this.fechaDevolucionReal = fechaDevolucion;
   }
   public int calcularDiasRetraso() {
-    LocalDate referencia = (fechaDevolucionReal != null)
-        ? fechaDevolucionReal : LocalDate.now();
+    LocalDate referencia = (fechaDevolucionReal != null) ? fechaDevolucionReal : LocalDate.now();
     long dias = ChronoUnit.DAYS.between(fechaDevolucionPrevista, referencia);
 
     return dias > 0 ? (int) dias : 0;

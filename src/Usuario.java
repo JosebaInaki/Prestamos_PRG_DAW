@@ -22,7 +22,6 @@ public class Usuario {
     if (fechaRegistro == null) {
       throw new UsuarioInvalidoException("Fecha de registro incorrecta");
     }
-
     this.nombre = nombre;
     this.email = email;
     this.numeroSocio = numeroSocio;

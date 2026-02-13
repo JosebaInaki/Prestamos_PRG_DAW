@@ -16,7 +16,7 @@ public class Main {
         switch (opcion){
           case 1: {
             String nombre, email, numeroSocio;
-            LocalDate fechaRegistro;
+            LocalDate fechaRegistro = null;
 
             System.out.println("Nombre: ");
             nombre = in.nextLine();
@@ -26,18 +26,23 @@ public class Main {
 
             System.out.println("Numero de Socio");
             numeroSocio = in.nextLine();
-
-            System.out.println("Fecha registro (dd/mm/aaaa):");
-            fechaRegistro = LocalDate.parse(in.nextLine(), formatoFecha);
-
+            boolean fechaValida = false;
+            while (!fechaValida) {
+              try {
+                System.out.println("Fecha registro (dd/MM/yyyy):");
+                String textoFecha = in.nextLine();
+                fechaRegistro = LocalDate.parse(textoFecha, formatoFecha);
+                fechaValida = true;
+              } catch (DateTimeParseException e) {
+                System.out.println("Formato incorrecto. Usa dd/MM/yyyy");
+              }
+            }
             Usuario usuarioNuevo = new Usuario(nombre, email, numeroSocio, fechaRegistro);
             gestorBiblioteca.registrarUsuario(usuarioNuevo);
-
             System.out.println("Usuario correctamente registrado");
             break;
           }
           case 2: {
-
               String codigoLibro, tituloLibro;
               LocalDate fechaPrestamo;
 
@@ -56,14 +61,20 @@ public class Main {
               Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
 
               gestorBiblioteca.realizarPrestamo(codigoLibro, tituloLibro, fechaPrestamo, usuario);
-              break;
             }
             catch (DateTimeParseException dtpe){
-              System.out.println("Fomato de fecha incorrecto, \n Debe ser dd/mm/yyyy");
+              System.out.println("Fomato de fecha incorrecto, \nDebe ser dd/mm/yyyy");
             }
-
+            break;
           }
           case 3:
+            String codigoLibro;
+            LocalDate fechaDevolucion;
+            System.out.println("Código libro: ");
+            codigoLibro=in.nextLine();
+            System.out.println("Fecha devolución (dd/mm/aaaa): ");
+            fechaDevolucion=LocalDate.parse(in.nextLine(), formatoFecha);
+            gestorBiblioteca.devolverLibro(codigoLibro,fechaDevolucion);
             break;
           case 4:
               System.out.println("Numero de socio del usuario:");
@@ -81,33 +92,50 @@ public class Main {
               }
               break;
           case 5:
-            Prestamo[] prestamos = gestorBiblioteca.getPrestamos();
-
-            for (Prestamo p : prestamos) {
-              if (p != null && p.getFechaDevolucionReal() == null) {
-                System.out.println(p);
+            try{
+              Prestamo[] prestamos = gestorBiblioteca.getPrestamos();
+              for (Prestamo p : prestamos) {
+                System.out.println(p.toString());
               }
             }
-
+            catch (NullPointerException npe){
+              System.out.println("No hay prestamos");
+          }
             break;
           case 6:
-            gestorBiblioteca.getUsuarios();
+            try {
+              Usuario[] usuarios = gestorBiblioteca.getUsuarios();
+              for (Usuario u : usuarios) {
+                if (u.estaSancionado()) {
+                  System.out.println(u.toString());
+                }
+              }
+            }
+            catch (NullPointerException npe){
+              System.out.println("No hay usuarios");
+            }
             break;
           case 7:
-            Usuario[] usuarios= gestorBiblioteca.getUsuarios();
-            for (int i=0;i<usuarios.length;i++)
-            {
-              if(usuarios[i].estaSancionado() && usuarios[i].getFechaFinSancion().isBefore(LocalDate.now()))
+            try{
+              Usuario[] usuarios = gestorBiblioteca.getUsuarios();
+              usuarios= gestorBiblioteca.getUsuarios();
+              for (int i=0;i<usuarios.length;i++)
               {
-                usuarios[i].levantarSancion();
+                if(usuarios[i].estaSancionado() && usuarios[i].getFechaFinSancion().isBefore(LocalDate.now()))
+                {
+                  usuarios[i].levantarSancion();
+                }
               }
+            }
+            catch (NullPointerException npe){
+              System.out.println("No hay usuarios");
             }
             break;
           case 8:
             System.out.println("Has salido");
             break;
           default:
-            System.out.println("Opción no válida,\n Solo se admiten números del 1 al 8");
+            System.out.println("Opción no válida,\nSolo se admiten números del 1 al 8");
             break;
         }
       }while (opcion!=8);

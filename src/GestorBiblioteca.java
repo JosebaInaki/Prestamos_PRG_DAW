@@ -39,20 +39,17 @@ public class GestorBiblioteca {
     prestamos[numeroPrestamos++] = prestamoNuevo;
     return prestamoNuevo;
   }
-  public boolean devolverLibro(String codigoLibro, LocalDate fechaDevolucion)
-      throws PrestamoInvalidoException {
+  public boolean devolverLibro(String codigoLibro, LocalDate fechaDevolucion) throws PrestamoInvalidoException {
     for (int i = 0; i < numeroPrestamos; i++) {
 
-      if (prestamos[i].getCodigoLibro().equals(codigoLibro)
-          && prestamos[i].getFechaDevolucionReal() == null) {
+      if (prestamos[i].getCodigoLibro().equals(codigoLibro) && prestamos[i].getFechaDevolucionReal() == null) {
 
         prestamos[i].registrarDevolucion(fechaDevolucion);
 
         int diasRetraso = prestamos[i].calcularDiasRetraso();
 
         if (diasRetraso > 0) {
-          prestamos[i].getSocio()
-              .sancionar(diasRetraso, fechaDevolucion);
+          prestamos[i].getSocio().sancionar(diasRetraso, fechaDevolucion);
         }
         return true;
       }
