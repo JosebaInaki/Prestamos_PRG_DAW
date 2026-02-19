@@ -1,4 +1,6 @@
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class GestorBiblioteca {
   private static final int MAX_USUARIOS = 50;
@@ -32,7 +34,7 @@ public class GestorBiblioteca {
     for (int i = 0; i < numeroPrestamos; i++) {
       if (prestamos[i].getCodigoLibro().equals(codigoLibro)
           && prestamos[i].getFechaDevolucionReal() == null) {
-        throw new LibroNoDisponibleException("Libro no disponible");
+        throw new LibroNoDisponibleException("Libro no disponible. Ya está prestado.");
       }
     }
     Prestamo prestamoNuevo = new Prestamo(codigoLibro, tituloLibro, usuario, fechaPrestamo);
@@ -40,6 +42,7 @@ public class GestorBiblioteca {
     return prestamoNuevo;
   }
   public boolean devolverLibro(String codigoLibro, LocalDate fechaDevolucion) throws PrestamoInvalidoException {
+    DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
     for (int i = 0; i < numeroPrestamos; i++) {
 
       if (prestamos[i].getCodigoLibro().equals(codigoLibro) && prestamos[i].getFechaDevolucionReal() == null) {
@@ -49,6 +52,8 @@ public class GestorBiblioteca {
         int diasRetraso = prestamos[i].calcularDiasRetraso();
 
         if (diasRetraso > 0) {
+          System.out.println("Devolución registrada con "+diasRetraso+" días de retraso");
+          System.out.println("Usuario sancionado por "+diasRetraso+" días (hasta el ("+formatoFecha.format(fechaDevolucion.plusDays(diasRetraso))+")");
           prestamos[i].getSocio().sancionar(diasRetraso, fechaDevolucion);
         }
         return true;

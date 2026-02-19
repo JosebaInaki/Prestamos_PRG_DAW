@@ -26,17 +26,13 @@ public class Main {
 
             System.out.println("Numero de Socio");
             numeroSocio = in.nextLine();
-            boolean fechaValida = false;
-            while (!fechaValida) {
               try {
                 System.out.println("Fecha registro (dd/MM/yyyy):");
                 String textoFecha = in.nextLine();
                 fechaRegistro = LocalDate.parse(textoFecha, formatoFecha);
-                fechaValida = true;
               } catch (DateTimeParseException e) {
-                System.out.println("Formato incorrecto. Usa dd/MM/yyyy");
+                System.out.println("Fecha no válida.");
               }
-            }
             Usuario usuarioNuevo = new Usuario(nombre, email, numeroSocio, fechaRegistro);
             gestorBiblioteca.registrarUsuario(usuarioNuevo);
             System.out.println("Usuario correctamente registrado");
@@ -61,20 +57,26 @@ public class Main {
               Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
 
               gestorBiblioteca.realizarPrestamo(codigoLibro, tituloLibro, fechaPrestamo, usuario);
+              System.out.println("Préstamo realizado.\nDevolución prevista: "+formatoFecha.format(fechaPrestamo.plusDays(14)));
             }
             catch (DateTimeParseException dtpe){
-              System.out.println("Fomato de fecha incorrecto, \nDebe ser dd/mm/yyyy");
+              System.out.println("Fecha no válida.");
             }
             break;
           }
           case 3:
-            String codigoLibro;
-            LocalDate fechaDevolucion;
-            System.out.println("Código libro: ");
-            codigoLibro=in.nextLine();
-            System.out.println("Fecha devolución (dd/mm/aaaa): ");
-            fechaDevolucion=LocalDate.parse(in.nextLine(), formatoFecha);
-            gestorBiblioteca.devolverLibro(codigoLibro,fechaDevolucion);
+            try {
+              String codigoLibro;
+              LocalDate fechaDevolucion;
+              System.out.println("Código libro: ");
+              codigoLibro = in.nextLine();
+              System.out.println("Fecha devolución (dd/mm/aaaa): ");
+              fechaDevolucion = LocalDate.parse(in.nextLine(), formatoFecha);
+              gestorBiblioteca.devolverLibro(codigoLibro, fechaDevolucion);
+            }
+            catch (DateTimeParseException dte){
+              System.out.println("Fecha no válida");
+            }
             break;
           case 4:
               System.out.println("Numero de socio del usuario:");
@@ -100,7 +102,7 @@ public class Main {
             }
             catch (NullPointerException npe){
               System.out.println("No hay prestamos");
-          }
+            }
             break;
           case 6:
             try {
@@ -112,7 +114,7 @@ public class Main {
               }
             }
             catch (NullPointerException npe){
-              System.out.println("No hay usuarios");
+              System.out.println("No hay usuarios sancionados");
             }
             break;
           case 7:
@@ -128,7 +130,7 @@ public class Main {
               }
             }
             catch (NullPointerException npe){
-              System.out.println("No hay usuarios");
+              System.out.println("No hay usuarios sancionados");
             }
             break;
           case 8:

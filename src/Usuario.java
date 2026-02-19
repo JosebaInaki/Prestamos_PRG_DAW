@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
   private String nombre;
@@ -38,25 +39,21 @@ public class Usuario {
     this.fechaFinSancion = null;
   }
   public boolean estaSancionado() {
-    if (!sancionado || fechaFinSancion == null) return false;
-    return !LocalDate.now().isAfter(fechaFinSancion);
+    return sancionado;
   }
   @Override
   public String toString() {
+    DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
     return "Nombre: " + nombre +
         "\nEmail: " + email +
         "\nNumero Socio: " + numeroSocio +
-        "\nFecha registro: " + fechaRegistro +
-        "\nSancionado: " + estaSancionado() +
-        "\nFecha fin sanción: " + fechaFinSancion;
+        "\nFecha registro: " + formatoFecha.format(fechaRegistro)+
+        "\nFecha fin sanción: " + formatoFecha.format(fechaFinSancion);
   }
   public String getNumeroSocio() {
     return numeroSocio;
   }
   public LocalDate getFechaFinSancion() {
     return fechaFinSancion;
-  }
-  public boolean getSancionado(){
-    return sancionado;
   }
 }

@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Prestamo {
@@ -63,11 +64,11 @@ public class Prestamo {
   }
   @Override
   public String toString() {
+    DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
     return "Código libro: " + codigoLibro +
         "\nTítulo: " + tituloLibro +
         "\nSocio: " + socio.getNumeroSocio() +
-        "\nFecha préstamo: " + fechaPrestamo +
-        "\nFecha devolución prevista: " + fechaDevolucionPrevista +
-        "\nFecha devolución real: " + fechaDevolucionReal;
+        "\nFecha préstamo: " + formatoFecha.format(fechaPrestamo) +
+        "\nFecha devolución prevista: " + formatoFecha.format(fechaDevolucionPrevista);
   }
 }
