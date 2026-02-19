@@ -13,6 +13,7 @@ public class Main {
       do {
         mostrarMenu();
         opcion=Integer.parseInt(in.nextLine());
+        System.out.println();
         switch (opcion){
           case 1: {
             String nombre, email, numeroSocio;
@@ -39,14 +40,14 @@ public class Main {
             break;
           }
           case 2: {
-              String codigoLibro, tituloLibro;
-              LocalDate fechaPrestamo;
+            String codigoLibro, tituloLibro;
+            LocalDate fechaPrestamo;
 
-              System.out.println("Código del libro: ");
-              codigoLibro = in.nextLine();
+            System.out.println("Código del libro: ");
+            codigoLibro = in.nextLine();
 
-              System.out.println("Título del libro: ");
-              tituloLibro = in.nextLine();
+            System.out.println("Título del libro: ");
+            tituloLibro = in.nextLine();
             try{
               System.out.println("Fecha prestamo (dd/mm/aaaa):");
               fechaPrestamo = LocalDate.parse(in.nextLine(), formatoFecha);
@@ -79,58 +80,66 @@ public class Main {
             }
             break;
           case 4:
-              System.out.println("Numero de socio del usuario:");
-              String numeroSocio = in.nextLine();
+            System.out.println("Numero de socio del usuario:");
+            String numeroSocio = in.nextLine();
 
-              Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
-              if(usuario==null){
-                System.out.println("Este usuario no existe");
-              }
-              else if(usuario.estaSancionado()){
-                System.out.println("Este usuario esta sancionado");
-              }
-              else {
-                System.out.println("Este usuario no esta sancionado");
-              }
-              break;
-          case 5:
-            try{
-              Prestamo[] prestamos = gestorBiblioteca.getPrestamos();
-              for (Prestamo p : prestamos) {
-                System.out.println(p.toString());
-              }
+            Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
+            if(usuario==null){
+              System.out.println("Este usuario no existe");
             }
-            catch (NullPointerException npe){
+            else if(usuario.estaSancionado()){
+              System.out.println("Este usuario esta sancionado");
+            }
+            else {
+              System.out.println("Este usuario no esta sancionado");
+            }
+            break;
+          case 5:
+            Prestamo[] prestamos = gestorBiblioteca.getPrestamos();
+            if(prestamos == null || prestamos.length == 0){
               System.out.println("No hay prestamos");
+            }
+            else{
+              for (Prestamo p : prestamos){
+                if (p != null) {
+                  System.out.println(p.toString());
+                }
+              }
             }
             break;
           case 6:
-            try {
-              Usuario[] usuarios = gestorBiblioteca.getUsuarios();
+            Usuario[] usuarios = gestorBiblioteca.getUsuarios();
+            if(usuarios == null || usuarios.length == 0) {
+                System.out.println("No hay usuarios");
+            }
+            else{
+              boolean haySancionados = false;
+
               for (Usuario u : usuarios) {
-                if (u.estaSancionado()) {
+                if (u != null && u.estaSancionado()) {
                   System.out.println(u.toString());
+                  haySancionados = true;
                 }
               }
-            }
-            catch (NullPointerException npe){
-              System.out.println("No hay usuarios sancionados");
+              if (!haySancionados) {
+                System.out.println("No hay usuarios sancionados");
+              }
             }
             break;
           case 7:
-            try{
-              Usuario[] usuarios = gestorBiblioteca.getUsuarios();
-              usuarios= gestorBiblioteca.getUsuarios();
-              for (int i=0;i<usuarios.length;i++)
-              {
-                if(usuarios[i].estaSancionado() && usuarios[i].getFechaFinSancion().isBefore(LocalDate.now()))
-                {
-                  usuarios[i].levantarSancion();
+            Usuario[] usuarioss = gestorBiblioteca.getUsuarios();
+            if (usuarioss != null) {
+              for (Usuario u : usuarioss) {
+                if (u != null
+                    && u.estaSancionado()
+                    && u.getFechaFinSancion() != null
+                    && u.getFechaFinSancion().isBefore(LocalDate.now())){
+                  u.levantarSancion();
                 }
               }
             }
-            catch (NullPointerException npe){
-              System.out.println("No hay usuarios sancionados");
+            else {
+              System.out.println("No hay usuarios");
             }
             break;
           case 8:
@@ -148,6 +157,7 @@ public class Main {
   }
   public static void mostrarMenu(){
     System.out.println();
+    System.out.println("=== SISTEMA GESTIÓN BIBLIOTECA ===");
     System.out.println("1. Registrar nuevo usuario");
     System.out.println("2. Realizar préstamo de libro");
     System.out.println("3. Devolver libro");
@@ -156,5 +166,7 @@ public class Main {
     System.out.println("6. Mostrar usuarios sancionados");
     System.out.println("7. Actualizar sanciones");
     System.out.println("8. Salir");
+    System.out.println();
+    System.out.println("Escribe tu opción: ");
   }
 }
