@@ -4,7 +4,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Main {
-  public static void main(String[] args) throws UsuarioRepetidoException, UsuarioInvalidoException, PrestamoInvalidoException, UsuarioSancionadoException, LibroNoDisponibleException {
+  public static void main(String[] args) throws UsuarioRepetidoException, UsuarioInvalidoException, PrestamoInvalidoException, UsuarioSancionadoException, LibroNoDisponibleException{
     int opcion=0;
     Scanner in = new Scanner(System.in);
     GestorBiblioteca gestorBiblioteca=new GestorBiblioteca();
@@ -40,7 +40,7 @@ public class Main {
               break;
             }
             case 2: {
-              String codigoLibro, tituloLibro;
+              String codigoLibro, tituloLibro,numeroSocio;
               LocalDate fechaPrestamo;
 
               System.out.println("Código del libro: ");
@@ -48,12 +48,11 @@ public class Main {
 
               System.out.println("Título del libro: ");
               tituloLibro = in.nextLine();
+              System.out.println("Numero de socio del usuario:");
+              numeroSocio = in.nextLine();
               try{
                 System.out.println("Fecha prestamo (dd/mm/aaaa):");
                 fechaPrestamo = LocalDate.parse(in.nextLine(), formatoFecha);
-
-                System.out.println("Numero de socio del usuario:");
-                String numeroSocio = in.nextLine();
 
                 Usuario usuario = gestorBiblioteca.buscarUsuario(numeroSocio);
 
@@ -95,17 +94,17 @@ public class Main {
               }
               break;
             case 5:
-              boolean hayPrestamos=false;
+              boolean hayPrestamos = false;
               Prestamo[] prestamos = gestorBiblioteca.getPrestamos();
 
-                for (Prestamo p : prestamos){
-                  if (p != null) {
-                    System.out.println(p.toString());
-                    hayPrestamos=true;
-                  }
+              for (Prestamo p : prestamos) {
+                if (p != null && p.getFechaDevolucionReal() == null) {
+                  System.out.println(p);
+                  hayPrestamos = true;
                 }
-              if(!hayPrestamos){
-                System.out.println("No hay prestamos");
+              }
+              if (!hayPrestamos) {
+                System.out.println("No hay préstamos activos");
               }
               break;
             case 6:

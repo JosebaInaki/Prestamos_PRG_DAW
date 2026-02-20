@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Usuario {
+public class Usuario{
   private String nombre;
   private String email;
   private String numeroSocio;
@@ -9,7 +9,7 @@ public class Usuario {
   private boolean sancionado;
   private LocalDate fechaFinSancion;
 
-  public Usuario(String nombre, String email, String numeroSocio, LocalDate fechaRegistro) throws UsuarioInvalidoException {
+  public Usuario(String nombre, String email, String numeroSocio, LocalDate fechaRegistro) throws UsuarioInvalidoException{
 
     if (nombre == null) {
       throw new UsuarioInvalidoException("Nombre incorrecto");
@@ -30,19 +30,19 @@ public class Usuario {
     this.sancionado = false;
     this.fechaFinSancion = null;
   }
-  public void sancionar(int diasSancion, LocalDate inicioSancion) {
+  public void sancionar(int diasSancion, LocalDate inicioSancion){
     this.sancionado = true;
     this.fechaFinSancion = inicioSancion.plusDays(diasSancion);
   }
-  public void levantarSancion() {
+  public void levantarSancion(){
     this.sancionado = false;
     this.fechaFinSancion = null;
   }
-  public boolean estaSancionado() {
+  public boolean estaSancionado(){
     return sancionado;
   }
   @Override
-  public String toString() {
+  public String toString(){
     DateTimeFormatter formatoFecha =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
     return "Nombre: " + nombre +
         "\nEmail: " + email +
@@ -50,10 +50,10 @@ public class Usuario {
         "\nFecha registro: " + formatoFecha.format(fechaRegistro)+
         "\nFecha fin sanción: " + (fechaFinSancion != null ? formatoFecha.format(fechaFinSancion) : "Sin sanción");
   }
-  public String getNumeroSocio() {
+  public String getNumeroSocio(){
     return numeroSocio;
   }
-  public LocalDate getFechaFinSancion() {
+  public LocalDate getFechaFinSancion(){
     return fechaFinSancion;
   }
 }

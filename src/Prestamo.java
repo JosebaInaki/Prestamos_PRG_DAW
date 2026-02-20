@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-public class Prestamo {
+public class Prestamo{
   private String codigoLibro;
   private String tituloLibro;
   private Usuario socio;
@@ -10,7 +10,7 @@ public class Prestamo {
   private LocalDate fechaDevolucionPrevista;
   private LocalDate fechaDevolucionReal;
 
-  public Prestamo(String codigoLibro, String tituloLibro, Usuario socio, LocalDate fechaPrestamo) throws PrestamoInvalidoException {
+  public Prestamo(String codigoLibro, String tituloLibro, Usuario socio, LocalDate fechaPrestamo) throws PrestamoInvalidoException{
 
     if (codigoLibro == null || !codigoLibro.matches("[A-Z]{3}\\d{4}")){
       throw new PrestamoInvalidoException("Código del libro incorrecto,\nDebe tener este formato: 3 letras mayúsculas + 4 dígitos");
@@ -69,6 +69,7 @@ public class Prestamo {
         "\nTítulo: " + tituloLibro +
         "\nSocio: " + socio.getNumeroSocio() +
         "\nFecha préstamo: " + formatoFecha.format(fechaPrestamo) +
-        "\nFecha devolución prevista: " + formatoFecha.format(fechaDevolucionPrevista);
+        "\nFecha devolución prevista: " + formatoFecha.format(fechaDevolucionPrevista)+
+        "\nFecha devolución real: "+ (fechaDevolucionReal != null ? formatoFecha.format(fechaDevolucionReal) : "Pendiente");
   }
 }

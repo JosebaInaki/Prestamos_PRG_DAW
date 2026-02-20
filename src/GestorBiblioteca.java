@@ -56,7 +56,6 @@ public class GestorBiblioteca{
           System.out.println("Usuario sancionado por "+diasRetraso+" días (hasta el ("+formatoFecha.format(fechaDevolucion.plusDays(diasRetraso))+")");
           prestamos[i].getSocio().sancionar(diasRetraso, fechaDevolucion);
         }
-        prestamos[i]=null;
         return true;
       }
     }
@@ -64,7 +63,7 @@ public class GestorBiblioteca{
   }
   public Usuario buscarUsuario(String numeroSocio){
 
-    for (int i = 0; i < numeroUsuarios; i++) {
+    for (int i = 0; i < numeroUsuarios; i++){
       if (usuarios[i].getNumeroSocio().equals(numeroSocio)){
         return usuarios[i];
       }
