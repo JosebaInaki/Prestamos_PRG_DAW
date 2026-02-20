@@ -11,7 +11,7 @@ public class Usuario {
 
   public Usuario(String nombre, String email, String numeroSocio, LocalDate fechaRegistro) throws UsuarioInvalidoException {
 
-    if (nombre == null || nombre.isBlank()) {
+    if (nombre == null) {
       throw new UsuarioInvalidoException("Nombre incorrecto");
     }
     if (email == null || !email.matches(".+@.+\\..+")) {
@@ -48,7 +48,7 @@ public class Usuario {
         "\nEmail: " + email +
         "\nNumero Socio: " + numeroSocio +
         "\nFecha registro: " + formatoFecha.format(fechaRegistro)+
-        "\nFecha fin sanción: " + formatoFecha.format(fechaFinSancion);
+        "\nFecha fin sanción: " + (fechaFinSancion != null ? formatoFecha.format(fechaFinSancion) : "Sin sanción");
   }
   public String getNumeroSocio() {
     return numeroSocio;
